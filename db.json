@@ -1,0 +1,36 @@
+{
+  "assignments": [
+    {
+      "title": "Rails Developer to work on a project",
+      "description": "I am looking for a Rails developer for about 50-60 hours of work to work on a project. You must have good experience with rails (min. 3 years), integrating with 3rd part api, oauth, stripe, etc. You must also be available to start ASAP and update regularly.",
+      "budget": 1200,
+      "points": 340,
+      "skills": ["Javascript", "Ruby"],
+      "timeframe": 9,
+      "client_id": 2
+    },
+    {
+      "id": 2,
+      "title": "Post 2"
+    },
+    {
+      "id": 3,
+      "title": "Post 3"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

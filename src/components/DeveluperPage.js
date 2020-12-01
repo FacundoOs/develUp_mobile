@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, Dimensions } from "react-native";
 import Users from "../modules/users";
-import { Card, CardItem, Icon, Left, Body, Badge } from "native-base";
+import { Card, CardItem, Icon, Left, Body, Badge, Button } from "native-base";
+import { useSelector } from "react-redux";
+import Assignments from "../modules/assignments";
 
-const DeveluperPage = ({ route }) => {
+const DeveluperPage = ({ route, navigation }) => {
   const [develuperProfile, setDeveluperProfile] = useState([]);
+  const currentUser = useSelector((state) => state.currentUser);
+  const [selected, setSelected] = useState(false);
+  const [resolver, setResolver] = useState(false);
 
   useEffect(() => {
     const getDeveluperProfile = async () => {
@@ -13,8 +18,30 @@ const DeveluperPage = ({ route }) => {
         setDeveluperProfile(response);
       }
     };
+    const selectedChecker = async () => {
+      if (route.params.selected) {
+        setSelected(true);
+      }
+    };
+    const resolverChecker = async () => {
+      if (route.params.resolver) {
+        setResolver(true);
+      }
+    };
     getDeveluperProfile();
+    selectedChecker();
+    resolverChecker();
   }, [route]);
+
+  const selectDeveluperHandler = async () => {
+    let response = await Assignments.selectDeveluper(
+      route.params.assignmentId,
+      route.params.userId
+    );
+    if (response.message) {
+      setSelected(true);
+    }
+  };
 
   return (
     <>
@@ -77,6 +104,57 @@ const DeveluperPage = ({ route }) => {
           </Text>
         </CardItem>
       </Card>
+
+      {currentUser.role === "client" && !selected && (
+        <Button
+          bordered
+          testID="selectDeveluperButton"
+          info
+          style={styles.develupersButtons}
+          onPress={() => selectDeveluperHandler()}
+        >
+          <Icon name="checkmark" />
+          <Text>
+            Select {develuperProfile.name} to {route.params.assignmentTitle}
+          </Text>
+        </Button>
+      )}
+      {currentUser.role === "client" && resolver ? (
+        <Button
+          style={styles.develupersButtons}
+          bordered
+          success
+          onPress={() => {
+            navigation.navigate("singleAssignment", {
+              assignmentId: route.params.assignmentId,
+            });
+          }}
+        >
+          <Text>
+            {develuperProfile.name} has successfully resolved "
+            {route.params.assignmentTitle}"
+          </Text>
+        </Button>
+      ) : (
+        currentUser.role === "client" &&
+        selected && (
+          <Button
+            style={styles.develupersButtons}
+            bordered
+            success
+            onPress={() => {
+              navigation.navigate("singleAssignment", {
+                assignmentId: route.params.assignmentId,
+              });
+            }}
+          >
+            <Text>
+              {develuperProfile.name} is currently working on "
+              {route.params.assignmentTitle}"
+            </Text>
+          </Button>
+        )
+      )}
     </>
   );
 };
@@ -85,7 +163,7 @@ export default DeveluperPage;
 
 const styles = StyleSheet.create({
   firstCard: {
-    backgroundColor: "#4e8de0",
+    backgroundColor: "#6eb0d4",
     height: 250,
   },
   person: {
@@ -121,5 +199,12 @@ const styles = StyleSheet.create({
   projects: {
     fontSize: 20,
     margin: 4,
+  },
+  fullWidth: {
+    width: Dimensions.get("window").width,
+  },
+  develupersButtons: {
+    margin: 5,
+    padding: 5,
   },
 });

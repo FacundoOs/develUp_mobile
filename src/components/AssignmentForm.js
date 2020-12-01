@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { CheckBox } from "native-base";
 import Assignments from "../modules/assignments";
 import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   Container,
   Button,
@@ -14,8 +14,9 @@ import {
   ListItem,
   Icon,
   Badge,
+  CheckBox
 } from "native-base";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 const AssignmentForm = (props) => {
   const [title, setTitle] = useState("");
@@ -212,7 +213,14 @@ const AssignmentForm = (props) => {
           <Text>{assignmentPoints}</Text>
         </Badge>
       </Item>
-      <Button testID="publishButton" block onPress={() => publishAssignment()}>
+      <Button
+        testID="publishButton"
+        bordered
+        info
+        block
+        onPress={() => publishAssignment()}
+      >
+        <Icon name="checkmark" />
         <Text>Publish</Text>
       </Button>
     </Container>
